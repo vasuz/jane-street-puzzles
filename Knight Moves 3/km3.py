@@ -18,7 +18,7 @@ board = [
     [None, None, None, None,    1, None, None, None],
 ]
 
-# Example (small) board
+# Given example (small) board -- for testing purposes
 sTopLimit    = [None, None,    9, None]
 sBottomLimit = [None,    1,    4, None]
 sLeftLimit   = [   6,    3, None, None]
