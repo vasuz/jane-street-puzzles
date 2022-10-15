@@ -99,7 +99,7 @@ def getColConstraint(value):
 # Keep track of all valid boards we find
 workingBoards = []
 
-# DFS by placing one incremental digit at each valid location and seeing if we eventually reach a valid state
+# DFS by placing one incremental digit at each valid location and see if we eventually reach a valid state
 def dfs(board, position):
     r, c = position
 
@@ -143,7 +143,7 @@ def dfs(board, position):
 dfs(board, (7, 4))
 
 # Once we have a list of working boards, we need to test each to find the board with the "smallest achievable product" of empty areas
-# We can do this by BFSing from each empty square and keeping track of how many adjacent empty squares there were (multiplying as we go)
+# We do this by BFSing from each empty square and counting how many adjacent empty squares there were (multiplying as we go)
 def getIslandProducts(board):
     board = [row.copy() for row in board]
     
