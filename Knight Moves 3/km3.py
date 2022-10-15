@@ -1,6 +1,6 @@
 from collections import deque
 
-# Given limit (border) values
+# Given limit (outside) values
 topLimit = [None, 29, 19, 33, 20, 27, 36, 35]
 bottomLimit = [13, 14, 12, 2, 1, 5, 7, None]
 leftLimit = [18, 19, 30, 10, 16, 11, 12, None]
@@ -36,6 +36,8 @@ sBoard = [
     [None,    1, None, None],
 ]
 
+# Determines whether a board meets the criteria to be a valid solution.
+# This will verify that no conflicts exist between any board & outside digits.
 def isValidBoard(board):
     def isValidLine(expectedFirstDigit, line):
         if not expectedFirstDigit:
@@ -62,6 +64,8 @@ def isValidBoard(board):
             return False
     return True
 
+# Determines whether it is still possible to create a valid board by strictly *adding* digits.
+# This will return false if any outside constraints have been irrecoverably violated (i.e. conflicting digit is the first in its line)
 def isImpossibleToSolve(board):
     for r, row in enumerate(board):
         if row[0] and leftLimit[r] and row[0] != leftLimit[r]:
@@ -76,6 +80,9 @@ def isImpossibleToSolve(board):
             return True
     return False
 
+# Determines which row/column numbers a digit is constrained to be placed in, or None if there are no constraints.
+# The intuition here is that if a digit is seen outside the board, it can only be placed in the associated corresponding row/col to fulfill the puzzle constraint.
+# This provides a huge optimization since we can completely disregard any boards that place digits outside of these rows/columns.
 def getRowConstraint(value):
     if value in leftLimit:
         return leftLimit.index(value)
@@ -89,16 +96,22 @@ def getColConstraint(value):
         return bottomLimit.index(value)
     return None
 
+# Keep track of all valid boards we find
 workingBoards = []
-def solve(board, position):
+
+# DFS by placing one incremental digit at each valid location and seeing if we eventually reach a valid state
+def dfs(board, position):
     r, c = position
 
+    # If the board has become unsolvable, just throw it away
     if isImpossibleToSolve(board):
         return
-
+    
+    # If the board is valid, save it but keep trying to place more digits as long as we're able to
     if isValidBoard(board):
         workingBoards.append(board)
 
+    # Neighbors by knight's move
     neighbors = [
         (r-2, c+1),
         (r-1, c+2),
@@ -110,6 +123,7 @@ def solve(board, position):
         (r-2, c-1),
     ]
 
+    # Valid moves are neighbors that are within board bounds, fit any constraints, and are currently empty
     validMoves = []
     rowConstraint = getRowConstraint(board[r][c]+1)
     colConstraint = getColConstraint(board[r][c]+1)
@@ -119,15 +133,17 @@ def solve(board, position):
                 if (rowConstraint == None or row == rowConstraint) and (colConstraint == None or col == colConstraint):
                     validMoves.append((row, col))
     
+    # Try placing the next digit in each of the valid options and proceeding
     for row, col in validMoves:
         newBoard = [row.copy() for row in board]
         newBoard[row][col] = board[r][c] + 1
-        solve(newBoard, (row, col))
+        dfs(newBoard, (row, col))
 
-solve(board, (7, 4))
+# Call our DFS function with the initial board state and the location of the '1' digit
+dfs(board, (7, 4))
 
-print(f"Found {len(workingBoards)} valid boards")
-
+# Once we have a list of working boards, we need to test each to find the board with the "smallest achievable product" of empty areas
+# We can do this by BFSing from each empty square and keeping track of how many adjacent empty squares there were (multiplying as we go)
 def getIslandProducts(board):
     board = [row.copy() for row in board]
     
@@ -164,14 +180,14 @@ def getIslandProducts(board):
     return islandProducts
 
 # For each working board, calculate the product of the size of empty regions
-# Keep track of the lowest product we see
-minProduct = float('inf')
+# Keep track of the smallest achievable product we find
+smallestAchievableProduct = float('inf')
 minBoard = None
 for board in workingBoards:
     islandProduct = getIslandProducts(board)
-    if islandProduct < minProduct:
-        minProduct = islandProduct
+    if islandProduct < smallestAchievableProduct:
+        smallestAchievableProduct = islandProduct
         minBoard = board
 
-print(f"Best result is >> {minProduct} << with board:")
+print(f"Solution is >> {smallestAchievableProduct} << from board:")
 [print(row) for row in minBoard]
