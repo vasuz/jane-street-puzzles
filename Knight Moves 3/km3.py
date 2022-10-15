@@ -1,10 +1,10 @@
 from collections import deque
 
 # Given limit (outside) values
-topLimit = [None, 29, 19, 33, 20, 27, 36, 35]
-bottomLimit = [13, 14, 12, 2, 1, 5, 7, None]
-leftLimit = [18, 19, 30, 10, 16, 11, 12, None]
-rightLimit = [None, 26, 36, 25, 37, 4, 23, 6]
+topLimit    = [None,   29,   19,   33,   20,   27,   36,   35]
+bottomLimit = [  13,   14,   12,    2,    1,    5,    7, None]
+leftLimit   = [  18,   19,   30,   10,   16,   11,   12, None]
+rightLimit  = [None,   26,   36,   25,   37,    4,   23,    6]
 
 # Full size board
 board = [
@@ -27,7 +27,7 @@ sSolved = [
     [None,    6,    9, None],
     [None,    3, None,    7],
     [   5,    8, None,    2],
-    [None,    1,    4, None]
+    [None,    1,    4, None],
 ]
 sBoard = [
     [None, None, None, None],
