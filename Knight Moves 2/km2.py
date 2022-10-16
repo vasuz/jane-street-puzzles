@@ -6,12 +6,6 @@ from collections import Counter, deque
 # 3. Putting observations 1 & 2 together, we need to visit each region exactly 5 times (making 12*5 = 60 moves in total)
 # 4. Since there are 10 rows/columns, we need to visit each 60/10 = 6 times
 
-# Given limit (outside) values
-topLimit    = [None,   29,   19,   33,   20,   27,   36,   35]
-bottomLimit = [  13,   14,   12,    2,    1,    5,    7, None]
-leftLimit   = [  18,   19,   30,   10,   16,   11,   12, None]
-rightLimit  = [None,   26,   36,   25,   37,    4,   23,    6]
-
 # Board (as given)
 board = [
     [   1, None, None, None, None, None,   43, None, None, None],
